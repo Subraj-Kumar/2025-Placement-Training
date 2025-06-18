@@ -1,1 +1,93 @@
+Question 1: Reverse Digits
 
+class Solution {
+  public:
+    int reverseDigits(int n) {
+        int m=0;
+        int p=0;
+        while(n>0){
+            p=n%10;
+            m=10*m+p;
+            n=n/10;
+        }
+            return m;
+    }
+};
+
+
+Question 2: Search Insert Position
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int n=0;
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]>=target){
+                return i;
+            }
+            n=i;
+        }
+        return n+1;
+    }
+};
+
+Question 3: Single Number 
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int maxm = nums[0], minm = nums[0], p;
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] > maxm) {
+                maxm = nums[i];
+            }
+            if (nums[i] < minm) {
+                minm = nums[i];
+            }
+        }
+
+        int offset = -minm;
+        int range = maxm - minm + 1;
+        vector<int> arr(range, 0);
+
+        for (int i = 0; i < nums.size(); i++) {
+            arr[nums[i] + offset]++;
+        }
+
+        for (int i = 0; i < range; i++) {
+            if (arr[i] == 1) {
+                p = i - offset;
+            }
+        }
+
+        return p;
+    }
+};
+
+Question 4: Missing Number
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int maxm = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] > maxm) {
+                maxm = nums[i];
+            }
+        }
+
+        vector<int> arr(maxm + 2, 0); // Allocate safely with vector
+        for (int i = 0; i < nums.size(); i++) {
+            arr[nums[i]]++;
+        }
+
+        for (int i = 0; i <= maxm + 1; i++) {
+            if (arr[i] == 0) {
+                return i;
+            }
+        }
+
+        return maxm + 1;
+    }
+};
