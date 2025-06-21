@@ -1,1 +1,100 @@
+Question 1: Find the Town Judge
+Code:
 
+class Solution {
+public:
+    int findJudge(int n, vector<vector<int>>& trust) {
+        vector<int> cnt(n + 1, 0);
+        for (int i = 0; i < trust.size(); i++){
+            int a = trust[i][0], b = trust[i][1];
+            cnt[a]--; 
+            cnt[b]++;
+        }
+        for (int i = 1; i <= n; i++){
+            if (cnt[i] == n - 1) return i;
+        }
+        return -1;
+    }
+};
+
+******************************************************************
+Question 2: Plus One
+Code:
+
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        vector<int> output = digits;
+        int n = output.size();
+
+        for (int i = n - 1; i >= 0; i--) {
+            if (output[i] < 9) {
+                output[i]++;
+                return output;
+            } else {
+                output[i] = 0;
+            }
+        }
+        output.insert(output.begin(), 1);
+    return output;
+    }
+};
+
+*********************************************************************
+Question 3: Maximum Subarray
+Code:
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int curr = nums[0], res = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            curr = max(nums[i], curr + nums[i]);
+            res = max(res, curr);
+        }
+        return res;
+    }
+};
+
+
+                    OR
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int n = nums.size();
+        int res = nums[0];
+
+        for (int i = 0; i < n; i++) {
+            int sum = 0;
+            for (int j = i; j < n; j++) {
+                sum += nums[j];
+                res = max(res, sum);
+            }
+        }
+
+        return res;
+    }
+};
+
+**********************************************************************
+QUestion 4: Assign Cookies
+Code: 
+
+class Solution {
+public:
+    int findContentChildren(vector<int>& g, vector<int>& s) {
+        sort(g.begin(), g.end());
+        sort(s.begin(), s.end());
+        int i = 0, j = 0;
+        while(i < g.size() && j < s.size()){
+            if(s[j] >= g[i]){
+                i++;
+            }
+            j++;
+        }
+        return i;
+    }
+};
+
+*******************************************END******************************************
