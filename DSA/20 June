@@ -1,1 +1,168 @@
+Q1:
+class Solution {
+    private:
+    void transpose(vector<vector<int>>& matrix) {
+        for (int i = 0; i < matrix.size(); ++i) {
+            for (int j = i; j < matrix[0].size(); ++j) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+    }
 
+    void reverseRows(vector<vector<int>>& matrix) {
+        for (int r = 0; r < matrix.size(); ++r) {
+            int left = 0;
+            int right = matrix.size() - 1;
+
+            while (left < right) {
+                int temp = matrix[r][left];
+                matrix[r][left] = matrix[r][right];
+                matrix[r][right] = temp;
+
+                ++left;
+                --right;
+            }
+        }
+    }
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        transpose(matrix);
+        reverseRows(matrix);
+    }
+};
+
+Q2:
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+        set<vector<int>> set;
+        vector<vector<int>> output;
+        for(int i=0; i<n-2; i++){
+            for(int j=i+1; j<n-1; j++){
+                for(int k=j+1; k<n; k++){
+                    if((nums[i] + nums[j] + nums[k] == 0) && i != j && j != k && k != i){
+                        set.insert({nums[i], nums[j], nums[k]});
+                    }
+                }
+            }
+        }
+        for(auto it : set){
+            output.push_back(it);
+        }
+        return output;
+    }
+};
+
+                oR
+
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        int n = nums.size();
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> output;
+        for(int i=0; i<n-1; i++){
+            int low = i+1, high = n-1;
+            while(low < high){
+                if(nums[i] + nums[low] + nums[high] < 0){
+                    low++;
+                }
+                else if(nums[i] + nums[low] + nums[high] > 0){
+                    high--;
+                }
+                else{
+                    output.push_back({nums[i], nums[low], nums[high]});
+                    int tempIndex1 = low, tempIndex2 = high;
+                    while(low < high && nums[low] == nums[tempIndex1]) low++;
+                    while(low < high && nums[high] == nums[tempIndex2]) high--;
+                }
+            }
+            while(i+1 < n && nums[i] == nums[i+1]) i++;
+        }
+        return output;
+    }
+};
+
+Q3:
+
+class Solution {
+public:
+    int findMaxConsecutiveOnes(vector<int>& nums) {
+        int count=0;
+        int maxm=0;
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]==1){
+                count++;
+                if(count>maxm){
+                    maxm=count;
+                }
+            }else{
+                count=0;
+            }
+        }
+        return maxm;
+    }
+};
+
+Q4:
+
+class Twitter {
+private:
+    int time;
+    unordered_map<int, unordered_set<int>> followers;
+    unordered_map<int, vector<pair<int, int>>> tweets; // userId -> list of (time, tweetId)
+
+public:
+    Twitter() {
+        time = 0;
+    }
+    
+    void postTweet(int userId, int tweetId) {
+        tweets[userId].push_back({time++, tweetId});
+    }
+    
+    vector<int> getNewsFeed(int userId) {
+        priority_queue<pair<int, int>> maxHeap;
+
+        // Include user's own tweets
+        if (tweets.count(userId)) {
+            for (auto& tweet : tweets[userId]) {
+                maxHeap.push(tweet);
+            }
+        }
+
+        // Include tweets from users they follow
+        for (int followeeId : followers[userId]) {
+            if (tweets.count(followeeId)) {
+                for (auto& tweet : tweets[followeeId]) {
+                    maxHeap.push(tweet);
+                }
+            }
+        }
+
+        vector<int> feed;
+        int count = 0;
+        while (!maxHeap.empty() && count < 10) {
+            feed.push_back(maxHeap.top().second);
+            maxHeap.pop();
+            count++;
+        }
+
+        return feed;
+    }
+    
+    void follow(int followerId, int followeeId) {
+        if (followerId != followeeId)
+            followers[followerId].insert(followeeId);
+    }
+    
+    void unfollow(int followerId, int followeeId) {
+        if (followers.count(followerId))
+            followers[followerId].erase(followeeId);
+    }
+};
