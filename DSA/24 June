@@ -1,1 +1,167 @@
+Qustion1: 
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Node {
+    int val;
+    Node* next;
+    Node(int v) : val(v), next(NULL) {}
+};
+
+class LinkedList {
+public:
+    Node* head;
+
+    LinkedList() {
+        head = NULL;
+    }
+
+    void insertAtBeginning(int val) {
+        Node* temp = new Node(val);
+        temp->next = head;
+        head = temp;
+    }
+
+    void insertAtEnd(int val) {
+        Node* temp = new Node(val);
+        if (!head) {
+            head = temp;
+            return;
+        }
+        Node* cur = head;
+        while (cur->next) cur = cur->next;
+        cur->next = temp;
+    }
+
+    void insertAtIndex(int index, int val) {
+        if (index == 0) {
+            insertAtBeginning(val);
+            return;
+        }
+        Node* cur = head;
+        for (int i = 0; i < index - 1 && cur; i++)
+            cur = cur->next;
+        if (!cur) return;
+        Node* temp = new Node(val);
+        temp->next = cur->next;
+        cur->next = temp;
+    }
+
+    void deleteAtBeginning() {
+        if (!head) return;
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+
+    void deleteAtEnd() {
+        if (!head) return;
+        if (!head->next) {
+            delete head;
+            head = NULL;
+            return;
+        }
+        Node* cur = head;
+        while (cur->next->next) cur = cur->next;
+        delete cur->next;
+        cur->next = NULL;
+    }
+
+    void deleteAtIndex(int index) {
+        if (!head) return;
+        if (index == 0) {
+            deleteAtBeginning();
+            return;
+        }
+        Node* cur = head;
+        for (int i = 0; i < index - 1 && cur; i++)
+            cur = cur->next;
+        if (!cur || !cur->next) return;
+        Node* temp = cur->next;
+        cur->next = cur->next->next;
+        delete temp;
+    }
+
+    void deleteFirstOccurrence(int val) {
+        if (!head) return;
+        if (head->val == val) {
+            deleteAtBeginning();
+            return;
+        }
+        Node* cur = head;
+        while (cur->next && cur->next->val != val)
+            cur = cur->next;
+        if (cur->next) {
+            Node* temp = cur->next;
+            cur->next = cur->next->next;
+            delete temp;
+        }
+    }
+
+    void display() {
+        Node* cur = head;
+        while (cur) {
+            cout << cur->val << " ";
+            cur = cur->next;
+        }
+        cout << "\n";
+    }
+};
+
+int main() {
+    LinkedList ll;
+
+    // Test: Insert at beginning
+    ll.insertAtBeginning(3);
+    ll.insertAtBeginning(1);
+    ll.display(); 
+    // 1 3
+
+    // Test: Insert at end
+    ll.insertAtEnd(5);
+    ll.insertAtEnd(7);
+    ll.display(); 
+    // Expected: 1 3 5 7
+
+    // Test: Insert at index
+    ll.insertAtIndex(2, 9);
+    ll.insertAtIndex(0, 0);
+    ll.display(); 
+    //Expected: 0 1 3 9 5 7
+
+    // Test: Delete at beginning
+    ll.deleteAtBeginning();
+    ll.deleteAtBeginning();
+    ll.display(); 
+    //Expected: 3 9 5 7
+
+    // Test: Delete at end
+    ll.deleteAtEnd();
+    ll.deleteAtEnd();
+    ll.display(); 
+    //Expected: 3 9
+
+    // Test: Delete at index
+    ll.deleteAtIndex(1);
+    ll.insertAtEnd(4);
+    ll.deleteAtIndex(1);
+    ll.display(); 
+    //Expected: 3
+
+    // Test: Delete value
+    ll.insertAtEnd(10);
+    ll.insertAtEnd(15);
+    ll.deleteFirstOccurrence(10);
+    ll.deleteFirstOccurrence(3);
+    ll.display(); 
+    //Expected: 15
+
+    return 0;
+}
+
+
+Question 2:
+
+
 
