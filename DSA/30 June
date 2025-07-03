@@ -1,0 +1,129 @@
+Q1:
+#include <iostream>
+using namespace std;
+
+class Stack {
+    int arr[1000];
+    int topIndex;
+
+public:
+    Stack() {
+        topIndex = -1;
+    }
+
+    void push(int x) {
+        if (topIndex == 999) {
+            cout << "Stack is full\n";
+        } else {
+            topIndex++;
+            arr[topIndex] = x;
+        }
+    }
+
+    void pop() {
+        if (topIndex == -1) {
+            cout << "Stack is empty\n";
+        } else {
+            topIndex--;
+        }
+    }
+
+    int top() {
+        if (topIndex == -1) {
+            cout << "Stack is empty\n";
+            return -1;
+        } else {
+            return arr[topIndex];
+        }
+    }
+
+    int peep(int pos) {
+        int idx = topIndex - pos + 1;
+        if (idx < 0 || idx > topIndex) {
+            cout << "Invalid position\n";
+            return -1;
+        } else {
+            return arr[idx];
+        }
+    }
+
+    void display() {
+        if (topIndex == -1) {
+            cout << "Stack is empty\n";
+        } else {
+            cout << "Stack from top to bottom:\n";
+            for (int i = topIndex; i >= 0; i--) {
+                cout << arr[i] << " ";
+            }
+            cout << "\n";
+        }
+    }
+};
+
+int main() {
+    Stack s;
+
+    s.push(5);
+    s.push(10);
+    s.push(15);
+    s.display();  // 15 10 5
+
+    cout << "Top element is: " << s.top() << "\n";        // 15
+    cout << "Element at position 2: " << s.peep(2) << "\n"; // 10
+
+    s.pop();
+    s.display();  // 10 5
+
+    return 0;
+}
+
+
+Q2:
+class Solution {
+public:
+    bool isValid(string s) {
+        stack<char> st;
+        for (char ch : s) {
+            if (ch == '(' || ch == '[' || ch == '{') {
+                st.push(ch);
+            } else {
+                if (st.empty()) return false;
+                char top = st.top();
+                if ((ch == ')' && top == '(') ||
+                    (ch == ']' && top == '[') ||
+                    (ch == '}' && top == '{')) {
+                    st.pop();
+                } else {
+                    return false;
+                }
+            }
+        }
+        return st.empty();
+    }
+};
+
+Q3:
+class Solution {
+public:
+    ListNode* swapNodes(ListNode* head, int k) {
+        int len = 0;
+        ListNode* temp = head;
+        while (temp != NULL) {
+            len++;
+            temp = temp->next;
+        }
+        ListNode* first = head;
+        for (int i = 1; i < k; i++) {
+            first = first->next;
+        }
+        ListNode* second = head;
+        for (int i = 1; i < len - k + 1; i++) {
+            second = second->next;
+        }
+        int tempVal = first->val;
+        first->val = second->val;
+        second->val = tempVal;
+
+        return head;
+    }
+};
