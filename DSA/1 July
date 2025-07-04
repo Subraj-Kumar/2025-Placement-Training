@@ -1,0 +1,162 @@
+Q1: Queue using arrays
+Code:
+#include <iostream>
+using namespace std;
+
+class Queue {
+private:
+    int* arr;
+    int frontIndex;
+    int rearIndex;
+    int capacity;
+    int count;
+
+public:
+    Queue(int size) {
+        arr = new int[size];
+        capacity = size;
+        frontIndex = 0;
+        rearIndex = -1;
+        count = 0;
+    }
+
+    void enqueue(int value) {
+        if (count == capacity) {
+            cout << "Queue is full\n";
+            return;
+        }
+        rearIndex = (rearIndex + 1) % capacity;
+        arr[rearIndex] = value;
+        count++;
+    }
+
+    void dequeue() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return;
+        }
+        frontIndex = (frontIndex + 1) % capacity;
+        count--;
+    }
+
+    int front() {
+        if (isEmpty()) {
+            cout << "Queue is empty\n";
+            return -1;
+        }
+        return arr[frontIndex];
+    }
+
+    bool isEmpty() {
+        return count == 0;
+    }
+
+    int size() {
+        return count;
+    }
+
+    ~Queue() {
+        delete[] arr;
+    }
+};
+
+int main() {
+    Queue q(5);
+
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+
+    cout << "Front element: " << q.front() << endl;
+
+    q.dequeue();
+
+    cout << "Front after dequeue: " << q.front() << endl;
+
+    cout << "Current size: " << q.size() << endl;
+
+    if (q.isEmpty()) {
+        cout << "Queue is empty\n";
+    } else {
+        cout << "Queue is not empty\n";
+    }
+
+    return 0;
+}
+
+Q2: Next Greater Element I
+Code:
+class Solution {
+public:
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, int> nextGreater;
+        stack<int> st;
+        for (int num : nums2) {
+            while (!st.empty() && num > st.top()) {
+                nextGreater[st.top()] = num;
+                st.pop();
+            }
+            st.push(num);
+        }
+
+        while (!st.empty()) {
+            nextGreater[st.top()] = -1;
+            st.pop();
+        }
+
+        vector<int> result;
+        for (int num : nums1) {
+            result.push_back(nextGreater[num]);
+        }
+
+        return result;
+    }
+};
+
+Q3: Next Greater Element II
+Code:
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> res(n, -1);
+        stack<int> st;
+
+        for (int i = 2 * n - 1; i >= 0; --i) {
+            int idx = i % n;
+            while (!st.empty() && nums[st.top()] <= nums[idx]) {
+                st.pop();
+            }
+            if (!st.empty()) {
+                res[idx] = nums[st.top()];
+            }
+            st.push(idx);
+        }
+
+        return res;
+    }
+};
+
+Q4: Odd Even Linked List
+Code:
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if (!head || !head->next) return head;
+
+        ListNode* odd = head;
+        ListNode* even = head->next;
+        ListNode* evenHead = even;
+
+        while (even && even->next) {
+            odd->next = even->next;
+            odd = odd->next;
+
+            even->next = odd->next;
+            even = even->next;
+        }
+
+        odd->next = evenHead;
+        return head;
+    }
+};
