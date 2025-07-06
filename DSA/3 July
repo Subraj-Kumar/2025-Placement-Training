@@ -1,0 +1,116 @@
+Q1:
+class Solution {
+public:
+    int calPoints(vector<string>& ops) {
+        vector<int> rec;
+        for (const auto& op : ops) {
+            if (op == "C") {
+                rec.pop_back();
+            } else if (op == "D") {
+                rec.push_back(rec.back() * 2);
+            } else if (op == "+") {
+                rec.push_back(rec[rec.size() - 1] + rec[rec.size() - 2]);
+            } else {
+                rec.push_back(stoi(op));
+            }
+        }
+        return accumulate(rec.begin(), rec.end(), 0);
+    }
+};
+
+Q2:
+class Solution {
+public:
+    string countOfAtoms(string formula) {
+        int i = 0;
+        map<string, int> freq = parse(formula, i);
+
+        string res = "";
+        for (auto &it : freq) {
+            res += it.first;
+            if (it.second > 1) res += to_string(it.second);
+        }
+        return res;
+    }
+
+private:
+    map<string, int> parse(string &s, int &i) {
+        map<string, int> m;
+
+        while (i < s.length()) {
+            if (s[i] == '(') {
+                ++i; // skip '('
+                auto inner = parse(s, i); // parse inner group
+                int mult = getNum(s, i);  // after ')'
+                for (auto &p : inner)
+                    m[p.first] += p.second * mult;
+            }
+            else if (s[i] == ')') {
+                ++i; // skip ')'
+                return m;
+            }
+            else {
+                string atom = getAtom(s, i);
+                int cnt = getNum(s, i);
+                m[atom] += cnt;
+            }
+        }
+
+        return m;
+    }
+
+    string getAtom(string &s, int &i) {
+        string atom = "";
+        atom += s[i++]; // capital letter
+        while (i < s.length() && islower(s[i]))
+            atom += s[i++];
+        return atom;
+    }
+
+    int getNum(string &s, int &i) {
+        if (i >= s.length() || !isdigit(s[i])) return 1;
+        int num = 0;
+        while (i < s.length() && isdigit(s[i]))
+            num = num * 10 + (s[i++] - '0');
+        return num;
+    }
+};
+// From CHAT GPT;
+
+Q3:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+    ListNode* head;
+
+public:
+    Solution(ListNode* head) {
+        this->head = head;
+    }
+
+    int getRandom() {
+        int res = head->val;
+        ListNode* curr = head->next;
+        int i = 2;
+
+        while (curr) {
+            // Replace result with curr->val with probability 1/i
+            if (rand() % i == 0) {
+                res = curr->val;
+            }
+            curr = curr->next;
+            i++;
+        }
+
+        return res;
+    }
+};
+// Help from CHAT GPT
