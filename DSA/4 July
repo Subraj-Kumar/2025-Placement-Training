@@ -1,0 +1,97 @@
+Q1:
+class Solution {
+public:
+    int celebrity(vector<vector<int>>& mat) {
+        int n = mat.size();
+        int cand = 0;
+        for (int i = 1; i < n; ++i) {
+            if (mat[cand][i] == 1) {
+                cand = i;
+            }
+        }
+        for (int i = 0; i < n; ++i) {
+            if (i == cand) continue;
+            if (mat[cand][i] == 1 || mat[i][cand] == 0)
+                return -1;
+        }
+
+        return cand;
+    }
+};
+
+Q2:
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int n = height.size();
+        if (n <= 2) return 0;
+
+        int left = 0, right = n - 1;
+        int leftMax = 0, rightMax = 0;
+        int water = 0;
+
+        while (left < right) {
+            if (height[left] < height[right]) {
+                if (height[left] >= leftMax)
+                    leftMax = height[left];
+                else
+                    water += leftMax - height[left];
+                ++left;
+            } else {
+                if (height[right] >= rightMax)
+                    rightMax = height[right];
+                else
+                    water += rightMax - height[right];
+                --right;
+            }
+        }
+
+        return water;
+    }
+};
+// Optimised with Mr Chat GPT
+
+Q3:
+class LRUCache {
+    int cap;
+    list<pair<int, int>> dq; // doubly-linked list to maintain order (most recent at front)
+    unordered_map<int, list<pair<int, int>>::iterator> mp; // key -> iterator in list
+
+public:
+    LRUCache(int capacity) {
+        cap = capacity;
+    }
+
+    int get(int key) {
+        // Key not present
+        if (mp.find(key) == mp.end())
+            return -1;
+
+        // Move the accessed node to front (most recent)
+        auto it = mp[key];
+        int val = it->second;
+        dq.erase(it);
+        dq.push_front({key, val});
+        mp[key] = dq.begin();
+        return val;
+    }
+
+    void put(int key, int value) {
+        // If key exists, erase it from list
+        if (mp.find(key) != mp.end()) {
+            dq.erase(mp[key]);
+        }
+
+        // If cache is full, remove least recently used (from back)
+        if (dq.size() == cap) {
+            auto last = dq.back();
+            mp.erase(last.first);
+            dq.pop_back();
+        }
+
+        // Insert new pair at front (most recent)
+        dq.push_front({key, value});
+        mp[key] = dq.begin();
+    }
+};
+// CHAT GPT
