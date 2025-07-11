@@ -1,0 +1,98 @@
+Q1:
+class Solution {
+public:
+    void dfs(vector<vector<int>>& img, int r, int c, int targetColor, int newColor) {
+        int m = img.size(), n = img[0].size();
+        if (r < 0 || c < 0 || r >= m || c >= n || img[r][c] != targetColor) return;
+
+        img[r][c] = newColor;
+
+        dfs(img, r+1, c, targetColor, newColor);
+        dfs(img, r-1, c, targetColor, newColor);
+        dfs(img, r, c+1, targetColor, newColor);
+        dfs(img, r, c-1, targetColor, newColor);
+    }
+
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        int targetColor = image[sr][sc];
+        if (targetColor != color)
+            dfs(image, sr, sc, targetColor, color);
+        return image;
+    }
+};
+
+Q2:
+class Solution {
+public:
+    const int MOD = 1e9 + 7;
+
+    long long modPow(long long base, long long exp) {
+        long long res = 1;
+        while (exp > 0) {
+            if (exp % 2 == 1) res = (res * base) % MOD;
+            base = (base * base) % MOD;
+            exp /= 2;
+        }
+        return res;
+    }
+
+    int countGoodNumbers(long long n) {
+        long long evenCount = (n + 1) / 2;
+        long long oddCount = n / 2;
+        return (modPow(5, evenCount) * modPow(4, oddCount)) % MOD;
+    }
+};
+
+
+Q3:
+class Solution {
+public:
+    vector<vector<int>> result;
+    vector<bool> used;
+
+    void backtrack(vector<int>& nums, vector<int>& path) {
+        if (path.size() == nums.size()) {
+            result.push_back(path);
+            return;
+        }
+
+        for (int i = 0; i < nums.size(); ++i) {
+            if (used[i]) continue;
+            if (i > 0 && nums[i] == nums[i-1] && !used[i-1]) continue;
+
+            used[i] = true;
+            path.push_back(nums[i]);
+            backtrack(nums, path);
+            path.pop_back();
+            used[i] = false;
+        }
+    }
+
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        sort(nums.begin(), nums.end());
+        used.assign(nums.size(), false);
+        vector<int> path;
+        backtrack(nums, path);
+        return result;
+    }
+};
+
+
+Q4:
+class Solution {
+public:
+    int numRabbits(vector<int>& answers) {
+        unordered_map<int, int> count;
+        for (int ans : answers) count[ans]++;
+
+        int total = 0;
+        for (auto& [x, freq] : count) {
+            int groupSize = x + 1;
+            int groups = (freq + groupSize - 1) / groupSize;
+            total += groups * groupSize;
+        }
+        return total;
+    }
+};
+// Optimised with GPT
+
